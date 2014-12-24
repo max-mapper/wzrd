@@ -1,6 +1,6 @@
 {
   "name": "wzrd",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Super minimal browserify development server. Inspired by [beefy](http://npmjs.org/beefy) but with less magic",
   "bin": {
     "wzrd": "bin.js"
