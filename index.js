@@ -51,8 +51,9 @@ module.exports.static = function(opts) {
 
 module.exports.browserify = function(entry, req, res) {
   res.setHeader('content-type', 'text/javascript')
-  var proc = spawn('browserify', [entry])
-  var message = req.url + ' (browserify ' + entry + ')'
+  var cmd = 'browserify ' + entry
+  var proc = spawn(cmd)
+  var message = req.url + ' (' + cmd + ')'
   console.time(message)
   proc.stderr.pipe(concat(function error(err) {
     if (!err.length) return
