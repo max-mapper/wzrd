@@ -6,6 +6,7 @@
     "wzrd": "bin.js"
   },
   "main": "index.js",
+  "preferGlobal": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
