@@ -2,6 +2,8 @@
 
 Super minimal browserify development server. Inspired by [beefy](http://npmjs.org/beefy) but with less magic
 
+[![Build Status](https://travis-ci.org/maxogden/wzrd.svg?branch=master)](https://travis-ci.org/maxogden/wzrd)
+
 ## installation
 
 ```
