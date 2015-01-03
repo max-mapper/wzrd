@@ -15,6 +15,10 @@ argv._.map(function(arg) {
   argv.entries.push({from: parts[0], to: parts[1]})
 })
 
+if (!argv.entries.length) {
+  console.error('Usage: wzrd [filename]')
+  process.exit(1)
+}
 
 if (argv.https) {
   wzrd.https(argv, function(err, server) {
