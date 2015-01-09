@@ -2,7 +2,7 @@
 var wzrd = require('./')
 var argv = require('minimist')(process.argv.slice(2))
 
-var port = argv.port || argv.p || argv.https ? 4443 : 9966
+var port = argv.port || argv.p || (argv.https ? 4443 : 9966)
 
 argv.entries = []
 
