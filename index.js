@@ -54,7 +54,6 @@ module.exports.browserify = function(entry, opts, req, res) {
   var cmd = ['browserify', entry]
   if (opts.browserifyArgs) cmd = cmd.concat(opts.browserifyArgs)
   cmd = cmd.join(' ')
-  console.log('CMD', cmd)
   var proc = spawn(cmd)
   var message = req.url + ' (' + cmd + ')'
   console.time(message)
