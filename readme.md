@@ -49,3 +49,11 @@ wzrd app.js --https
 ```
 
 this will start a local https server (by default `https://localhost:4443`) and generate a self signed SSL certificate. You will get a certificate error in your browser, but if you ignore the error the app should load.
+
+### passing extra args to browserify
+
+```
+wzrd app.js -- -t brfs
+```
+
+anything after `--` will get passed directly to `browserify` as arguments. so the example above would spawn the command `browserify app.js -t brfs`

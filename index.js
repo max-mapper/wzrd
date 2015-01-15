@@ -29,7 +29,7 @@ module.exports.static = function(opts) {
   
   opts.entries.forEach(function(entry) {
     router.addRoute('/' + entry.to, function(req, res, params) {
-      module.exports.browserify(entry.from, req, res)
+      module.exports.browserify(entry.from, opts, req, res)
     })
   })
   
@@ -49,9 +49,12 @@ module.exports.static = function(opts) {
   return router
 }
 
-module.exports.browserify = function(entry, req, res) {
+module.exports.browserify = function(entry, opts, req, res) {
   res.setHeader('content-type', 'text/javascript')
-  var cmd = 'browserify ' + entry
+  var cmd = ['browserify', entry]
+  if (opts.browserifyArgs) cmd = cmd.concat(opts.browserifyArgs)
+  cmd = cmd.join(' ')
+  console.log('CMD', cmd)
   var proc = spawn(cmd)
   var message = req.url + ' (' + cmd + ')'
   console.time(message)

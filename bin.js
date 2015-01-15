@@ -1,6 +1,16 @@
 #!/usr/bin/env node
+var minimist = require('minimist')
 var wzrd = require('./')
-var argv = require('minimist')(process.argv.slice(2))
+
+var args = process.argv.slice(2)
+var browserifyArgs
+var subIdx = args.indexOf('--')
+if (subIdx > -1) {
+  browserifyArgs = args.slice(subIdx + 1)
+  args = args.slice(0, subIdx)
+}
+
+var argv = minimist(args)
 
 var port = argv.port || argv.p || (argv.https ? 4443 : 9966)
 
@@ -14,6 +24,8 @@ argv._.map(function(arg) {
   var parts = arg.split(':')
   argv.entries.push({from: parts[0], to: parts[1]})
 })
+
+argv.browserifyArgs = browserifyArgs
 
 if (!argv.entries.length) {
   console.error('Usage: wzrd [filename]')
