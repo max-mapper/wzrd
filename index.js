@@ -42,7 +42,7 @@ module.exports.static = function(opts) {
   })
   
   router.addRoute('*', function(req, res, params) {
-    console.log(req.url, '(static)')
+    console.log(JSON.stringify({url: req.url, type: 'static', time: new Date()}))
     staticHandler(req, res)
   })
   
@@ -55,24 +55,26 @@ module.exports.browserify = function(entry, opts, req, res) {
   if (opts.browserifyArgs) cmd = cmd.concat(opts.browserifyArgs)
   cmd = cmd.join(' ')
   var proc = spawn(cmd)
-  var message = req.url + ' (' + cmd + ')'
-  console.time(message)
+  var start = Date.now()
   proc.stderr.pipe(concat(function error(err) {
     if (!err.length) return
-    console.timeEnd(message)
-    process.stdout.write(err.toString())
+    endLog()
+    process.stderr.write(err.toString())
     res.statusCode = 500
     res.end()
   }))
   proc.stdout.pipe(concat(function done(buff) {
     if (!buff.length) return
-    console.timeEnd(message)
+    endLog()
     res.end(buff)
   }))
+  function endLog() {
+    console.log(JSON.stringify({url: req.url, type: 'bundle', command: cmd, elapsed: (Date.now() - start) + 'ms', time: new Date()}))
+  }
 }
 
 module.exports.generateIndex = function(entry, req, res) {
-  console.log(req.url, '(generated)')
+  console.log(JSON.stringify({url: req.url, type: 'generated', time: new Date()}))
   res.setHeader('content-type', 'text/html')
   res.end('<!doctype html><head><meta charset="utf-8"></head><body><script src="' + entry + '"></script></body></html>')
 }
