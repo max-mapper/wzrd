@@ -33,8 +33,6 @@ if (!argv.entries.length) {
   process.exit(1)
 }
 
-
-
 portfinder.basePort = port
 portfinder.getPort(function(err, port) {
   if (err) {
