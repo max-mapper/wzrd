@@ -10,10 +10,10 @@ var concat = require('concat-stream')
 var wzrd = require('../')
 
 var cliPath =  path.resolve(__dirname, '..', 'bin.js')
-var server = 'http://localhost:9966'
 
-test('single entry', function(t) {
-  var startMsg = 'server started at http://localhost:9966'
+function run(t, port, cb) {
+  var server = 'http://localhost:'+port
+  var startMsg = 'server started at '+server
   var proc = spawn(cliPath, ['app.js'], { cwd: __dirname, env: process.env })
   waitFor(startMsg, proc.stderr, function(output) {
     t.ok(output.indexOf(startMsg) > -1, startMsg)
@@ -22,10 +22,30 @@ test('single entry', function(t) {
       bfy.stdout.pipe(concat(function gotbundle(bundle2) {
         t.equal(bundle.toString(), bundle2.toString(), 'bundles match')
         kill(proc.pid)
-        t.end()
+        if (cb) 
+          cb()
       }))
     })
   })
+}
+
+test('single entry', function(t) {
+  run(t, 9966, t.end)
+})
+
+test('portfinder', function(t) {
+  var server = require('http').createServer()
+  
+  setTimeout(function() {
+    server.listen(9966, function() {
+      setTimeout(function() {
+        run(t, 9967, function() {
+          t.end()
+          server.close()
+        })
+      }, 50)
+    })
+  }, 50)
 })
 
 function waitFor(string, stream, cb) {
