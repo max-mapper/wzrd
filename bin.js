@@ -21,11 +21,6 @@ argv.entries = argv._.map(function(arg) {
     return {from: arg, to: arg}
   var parts = arg.split(':')
   return {from: parts[0], to: parts[1]}
-}).map(function(e) {
-  return {
-    from: path.join(argv.path, e.from),
-    to: e.to
-  }
 })
 
 argv.browserifyArgs = browserifyArgs
