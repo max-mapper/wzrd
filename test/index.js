@@ -8,6 +8,7 @@ var npmSpawn = require('npm-execspawn')
 var request = require('request')
 var concat = require('concat-stream')
 var wzrd = require('../')
+var noop = function(){}
 
 var cliPath =  path.resolve(__dirname, '..', 'bin.js')
 
@@ -21,31 +22,28 @@ function run(t, port, cb) {
       var bfy = npmSpawn('browserify ' + 'app.js', { cwd: __dirname, env: process.env })
       bfy.stdout.pipe(concat(function gotbundle(bundle2) {
         t.equal(bundle.toString(), bundle2.toString(), 'bundles match')
+        proc.on('exit', cb||noop)
         kill(proc.pid)
-        if (cb) 
-          cb()
       }))
     })
   })
 }
 
 test('single entry', function(t) {
-  run(t, 9966, t.end)
+  run(t, 9966, function() {
+    t.end()
+  })
 })
 
 test('portfinder', function(t) {
   var server = require('http').createServer()
   
-  setTimeout(function() {
-    server.listen(9966, function() {
-      setTimeout(function() {
-        run(t, 9967, function() {
-          t.end()
-          server.close()
-        })
-      }, 50)
-    })
-  }, 50)
+  server.listen(9966, function() {
+      run(t, 9967, function() {
+        t.end()
+        server.close()
+      })
+  })
 })
 
 function waitFor(string, stream, cb) {
