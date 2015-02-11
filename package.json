@@ -8,7 +8,7 @@
   "main": "index.js",
   "preferGlobal": true,
   "scripts": {
-    "test": "cd test && node index.js"
+    "test": "node test/index.js"
   },
   "author": "max ogden",
   "license": "BSD",
