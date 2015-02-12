@@ -48,7 +48,7 @@ test('from dir', function(t) {
   run(t, { 
       port: 9966,
       args: ['test.js', '--dir=other'],
-      e: 'browserify ./other/test.js'
+      compare: 'browserify ./other/test.js'
     }, 
     function() {
     t.end()
