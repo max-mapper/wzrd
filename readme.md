@@ -24,7 +24,7 @@ wzrd app.js
 
 This will start a local development server (default of `localhost:9966`) that serves all files in the current folder with the exception of `app.js`, which will be browserified instead. `wzrd` will spawn the command `browserify app.js` and send the output bundle back to the client.
 
-If no `index.html` is present in the directory you run `wzrd` in, one will be generated for you that has a `<script src='app.js`></script>` in it.
+If no `index.html` is present in the directory you run `wzrd` in, one will be generated for you that has a `<script src='app.js'></script>` in it.
 
 ### mappings
 
