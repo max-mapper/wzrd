@@ -8,23 +8,51 @@ var npmSpawn = require('npm-execspawn')
 var request = require('request')
 var concat = require('concat-stream')
 var wzrd = require('../')
+var noop = function(){}
 
 var cliPath =  path.resolve(__dirname, '..', 'bin.js')
-var server = 'http://localhost:9966'
 
-test('single entry', function(t) {
-  var startMsg = 'server started at http://localhost:9966'
-  var proc = spawn(cliPath, ['app.js'], { cwd: __dirname, env: process.env })
+function run(t, opt, cb) {
+  var server = 'http://localhost:'+opt.port
+  var startMsg = 'server started at '+server
+
+  var entry = opt.entry || opt.args[0]
+  var proc = spawn(cliPath, opt.args, { cwd: __dirname, env: process.env })
   waitFor(startMsg, proc.stderr, function(output) {
     t.ok(output.indexOf(startMsg) > -1, startMsg)
-    request({url: server + '/app.js'}, function(err, resp, bundle) {
-      var bfy = npmSpawn('browserify ' + 'app.js', { cwd: __dirname, env: process.env })
+
+    var url = [server, entry].join('/')
+    request({url: url }, function(err, resp, bundle) {
+      var bfy = npmSpawn(opt.compare, { cwd: __dirname, env: process.env })
       bfy.stdout.pipe(concat(function gotbundle(bundle2) {
         t.equal(bundle.toString(), bundle2.toString(), 'bundles match')
+        proc.on('exit', cb||noop)
         kill(proc.pid)
-        t.end()
       }))
     })
+  })
+}
+
+test('single entry', function(t) {
+  run(t, { 
+      port: 9966,
+      args: ['app.js'],
+      compare: 'browserify app.js'
+  }, 
+    function() {
+    t.end()
+  })
+})
+
+test('from dir with entry mapping', function(t) {
+  run(t, { 
+      port: 9966,
+      entry: 'bundle.js',
+      args: ['other/test.js:bundle.js', '--dir=other'],
+      compare: 'browserify ./other/test.js'
+    }, 
+    function() {
+    t.end()
   })
 })
 

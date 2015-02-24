@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var minimist = require('minimist')
 var wzrd = require('./')
+var path = require('path')
 
 var args = process.argv.slice(2)
 var browserifyArgs
@@ -13,16 +14,13 @@ if (subIdx > -1) {
 var argv = minimist(args)
 
 var port = argv.port || argv.p || (argv.https ? 4443 : 9966)
+argv.path = argv.path || process.cwd()
 
-argv.entries = []
-
-argv._.map(function(arg) {
-  if (arg.indexOf(':') === -1) {
-    argv.entries.push({from: arg, to: arg})
-    return
-  }
+argv.entries = argv._.map(function(arg) {
+  if (arg.indexOf(':') === -1)
+    return {from: arg, to: arg}
   var parts = arg.split(':')
-  argv.entries.push({from: parts[0], to: parts[1]})
+  return {from: parts[0], to: parts[1]}
 })
 
 argv.browserifyArgs = browserifyArgs
