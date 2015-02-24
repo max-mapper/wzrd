@@ -14,7 +14,7 @@ if (subIdx > -1) {
 var argv = minimist(args)
 
 var port = argv.port || argv.p || (argv.https ? 4443 : 9966)
-argv.path = argv.dir || argv.d || process.cwd()
+argv.path = argv.path || process.cwd()
 
 argv.entries = argv._.map(function(arg) {
   if (arg.indexOf(':') === -1)

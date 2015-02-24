@@ -57,3 +57,8 @@ wzrd app.js -- -t brfs
 ```
 
 anything after `--` will get passed directly to `browserify` as arguments. so the example above would spawn the command `browserify app.js -t brfs`
+
+### other options
+
+- `--port` the port to run on (default 9966)
+- `--path` the base path for the server and optional `index.html`

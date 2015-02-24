@@ -16,7 +16,7 @@ function run(t, opt, cb) {
   var server = 'http://localhost:'+opt.port
   var startMsg = 'server started at '+server
 
-  var entry = opt.args[0]
+  var entry = opt.entry || opt.args[0]
   var proc = spawn(cliPath, opt.args, { cwd: __dirname, env: process.env })
   waitFor(startMsg, proc.stderr, function(output) {
     t.ok(output.indexOf(startMsg) > -1, startMsg)
@@ -44,10 +44,11 @@ test('single entry', function(t) {
   })
 })
 
-test('from dir', function(t) {
+test('from dir with entry mapping', function(t) {
   run(t, { 
       port: 9966,
-      args: ['test.js', '--dir=other'],
+      entry: 'bundle.js',
+      args: ['other/test.js:bundle.js', '--dir=other'],
       compare: 'browserify ./other/test.js'
     }, 
     function() {

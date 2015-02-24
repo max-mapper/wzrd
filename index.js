@@ -29,8 +29,7 @@ module.exports.static = function(opts) {
   
   opts.entries.forEach(function(entry) {
     router.addRoute('/' + entry.to, function(req, res, params) {
-      var from = path.join(basedir, entry.from)
-      module.exports.browserify(from, opts, req, res)
+      module.exports.browserify(entry.from, opts, req, res)
     })
   })
   
