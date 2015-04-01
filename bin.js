@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 var minimist = require('minimist')
+var portfinder = require('portfinder')
 var wzrd = require('./')
 
 var args = process.argv.slice(2)
@@ -32,22 +33,31 @@ if (!argv.entries.length) {
   process.exit(1)
 }
 
-if (argv.https) {
-  wzrd.https(argv, function(err, server) {
-    if (err) {
-      console.error('error generating certificate', err)
-      process.exit(1)
-    }
-    server.listen(port, listening)
-  })
-} else {
-  wzrd.http(argv).listen(port, listening)
-}
-
-function listening(err) {
+portfinder.basePort = port
+portfinder.getPort(function(err, port) {
   if (err) {
-    console.error('error starting server', err)
+    console.error('error finding port', err)
     process.exit(1)
   }
-  console.error('server started at ' + (argv.https ? 'https' : 'http') + '://localhost:' + port)
-}
+  
+  if (argv.https) {
+    wzrd.https(argv, function(err, server) {
+      if (err) {
+        console.error('error generating certificate', err)
+        process.exit(1)
+      }
+      server.listen(port, listening)
+    })
+  } else {
+    wzrd.http(argv).listen(port, listening)
+  }
+
+  function listening(err) {
+    if (err) {
+      console.error('error starting server', err)
+      process.exit(1)
+    }
+    console.error('server started at ' + (argv.https ? 'https' : 'http') + '://localhost:' + port)
+  }
+})
+
