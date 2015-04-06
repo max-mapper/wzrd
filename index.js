@@ -46,7 +46,7 @@ module.exports.static = function(opts) {
   router.addRoute('*', function(req, res, params) {
     console.log(JSON.stringify({url: req.url, type: 'static', time: new Date()}))
     staticHandler(req, res, function() {
-      if (opts['force-index']) return indexHtmlHandler(req, res)
+      if (opts.pushstate) return indexHtmlHandler(req, res)
       res.end('File not found. :(')
     })
   })
