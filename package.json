@@ -1,5 +1,5 @@
 {
-  "name": "@twilson63/wzrd",
+  "name": "wzrd",
   "version": "1.3.0",
   "description": "Super minimal browserify development server. Inspired by [beefy](http://npmjs.org/beefy) but with less magic",
   "bin": {
