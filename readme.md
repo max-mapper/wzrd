@@ -57,3 +57,11 @@ wzrd app.js -- -t brfs
 ```
 
 anything after `--` will get passed directly to `browserify` as arguments. so the example above would spawn the command `browserify app.js -t brfs`
+
+### pushstate server support
+
+```
+wzrd app.js --pushstate
+```
+
+if you want to leverage the html5 pushstate and support natural urls in your frontend application you can use the `--pushstate` flag. This flag will instruct the wzrd server to always return index.html for any file not found request from your server.

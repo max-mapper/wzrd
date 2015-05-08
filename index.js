@@ -26,26 +26,31 @@ module.exports.static = function(opts) {
   var basedir = opts.path || process.cwd()
   var staticHandler = ecstatic(basedir)
   var router = Router()
-  
-  opts.entries.forEach(function(entry) {
-    router.addRoute('/' + entry.to, function(req, res, params) {
-      module.exports.browserify(entry.from, opts, req, res)
-    })
-  })
-  
-  router.addRoute('/', function(req, res, params) {
+
+  var indexHtmlHandler = function(req, res, params) {
     fs.exists(path.join(basedir, 'index.html'), function(exists) {
       var firstEntry = opts.entries[0].to
       if (exists) return staticHandler(req, res)
       else module.exports.generateIndex(firstEntry, req, res)
     })
+  }
+
+  opts.entries.forEach(function(entry) {
+    router.addRoute('/' + entry.to, function(req, res, params) {
+      module.exports.browserify(entry.from, opts, req, res)
+    })
   })
-  
+
+  router.addRoute('/', indexHtmlHandler)
+
   router.addRoute('*', function(req, res, params) {
     console.log(JSON.stringify({url: req.url, type: 'static', time: new Date()}))
-    staticHandler(req, res)
+    staticHandler(req, res, function() {
+      if (opts.pushstate) return indexHtmlHandler(req, res)
+      res.end('File not found. :(')
+    })
   })
-  
+
   return router
 }
 
