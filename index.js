@@ -30,7 +30,10 @@ module.exports.static = function(opts) {
   var indexHtmlHandler = function(req, res, params) {
     fs.exists(path.join(basedir, 'index.html'), function(exists) {
       var firstEntry = opts.entries[0].to
-      if (exists) return staticHandler(req, res)
+      if (exists) {
+        req.url = '/index.html'
+        return staticHandler(req, res)
+      }
       else module.exports.generateIndex(firstEntry, req, res)
     })
   }
