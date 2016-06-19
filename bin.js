@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var minimist = require('minimist')
 var portfinder = require('portfinder')
+var os = require( 'os' );
 var wzrd = require('./')
 
 var args = process.argv.slice(2)
@@ -58,6 +59,14 @@ portfinder.getPort(function(err, port) {
       process.exit(1)
     }
     console.error('server started at ' + (argv.https ? 'https' : 'http') + '://localhost:' + port)
+
+    var ifaces = os.networkInterfaces()
+    Object.keys(ifaces).forEach(function (ifname) {
+        ifaces[ifname].forEach(function (iface) {
+            if ('IPv4' === iface.family) {
+                console.error('also available at ' + (argv.https ? 'https' : 'http') + '://' + iface.address + ':' + port)
+            }
+        });
+    });
   }
 })
-
