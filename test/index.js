@@ -13,8 +13,9 @@ var noop = function(){}
 var cliPath =  path.resolve(__dirname, '..', 'bin.js')
 
 function run(t, port, cb) {
-  var server = 'http://localhost:'+port
-  var startMsg = 'server started at '+server
+  var ipList = getIPList()
+  var server = 'http://' + ipList[0] + ':'+port
+  var startMsg = 'server started at:'
   var proc = spawn(cliPath, ['app.js'], { cwd: __dirname, env: process.env })
   waitFor(startMsg, proc.stderr, function(output) {
     t.ok(output.indexOf(startMsg) > -1, startMsg)
@@ -37,7 +38,7 @@ test('single entry', function(t) {
 
 test('portfinder', function(t) {
   var server = require('http').createServer()
-  
+
   server.listen(9966, function() {
       run(t, 9967, function() {
         t.end()
@@ -61,4 +62,17 @@ function waitFor(string, stream, cb) {
   stream.on('end', function() {
     if (!done) cb('')
   })
+}
+
+function getIPList() {
+    var ifaces = os.networkInterfaces()
+    var ipList = [];
+    Object.keys(ifaces).forEach(function (ifname) {
+        ifaces[ifname].forEach(function (iface) {
+            if ('IPv4' === iface.family) {
+                ipList.push(iface.address);
+            }
+        });
+    });
+    return ipList;
 }
