@@ -40,7 +40,7 @@ portfinder.getPort(function(err, port) {
     console.error('error finding port', err)
     process.exit(1)
   }
-  
+
   if (argv.https) {
     wzrd.https(argv, function(err, server) {
       if (err) {
@@ -58,13 +58,13 @@ portfinder.getPort(function(err, port) {
       console.error('error starting server', err)
       process.exit(1)
     }
-    console.error('server started at ' + (argv.https ? 'https' : 'http') + '://localhost:' + port)
+    console.error('server started at:');
 
     var ifaces = os.networkInterfaces()
     Object.keys(ifaces).forEach(function (ifname) {
         ifaces[ifname].forEach(function (iface) {
             if ('IPv4' === iface.family) {
-                console.error('also available at ' + (argv.https ? 'https' : 'http') + '://' + iface.address + ':' + port)
+                console.error((argv.https ? 'https' : 'http') + '://' + iface.address + ':' + port)
             }
         });
     });
