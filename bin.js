@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 var minimist = require('minimist')
 var portfinder = require('portfinder')
-var os = require( 'os' );
+var os = require('os')
 var wzrd = require('./')
 
 var args = process.argv.slice(2)
@@ -18,7 +18,7 @@ var port = argv.port || argv.p || (argv.https ? 4443 : 9966)
 
 argv.entries = []
 
-argv._.map(function(arg) {
+argv._.map(function (arg) {
   if (arg.indexOf(':') === -1) {
     argv.entries.push({from: arg, to: arg})
     return
@@ -35,14 +35,14 @@ if (!argv.entries.length) {
 }
 
 portfinder.basePort = port
-portfinder.getPort(function(err, port) {
+portfinder.getPort(function (err, port) {
   if (err) {
     console.error('error finding port', err)
     process.exit(1)
   }
 
   if (argv.https) {
-    wzrd.https(argv, function(err, server) {
+    wzrd.https(argv, function (err, server) {
       if (err) {
         console.error('error generating certificate', err)
         process.exit(1)
@@ -53,20 +53,20 @@ portfinder.getPort(function(err, port) {
     wzrd.http(argv).listen(port, listening)
   }
 
-  function listening(err) {
+  function listening (err) {
     if (err) {
       console.error('error starting server', err)
       process.exit(1)
     }
-    console.error('server started at:');
+    console.error('server started at:')
 
     var ifaces = os.networkInterfaces()
     Object.keys(ifaces).forEach(function (ifname) {
-        ifaces[ifname].forEach(function (iface) {
-            if ('IPv4' === iface.family) {
-                console.error((argv.https ? 'https' : 'http') + '://' + iface.address + ':' + port)
-            }
-        });
-    });
+      ifaces[ifname].forEach(function (iface) {
+        if (iface.family === 'IPv4') {
+          console.error((argv.https ? 'https' : 'http') + '://' + iface.address + ':' + port)
+        }
+      })
+    })
   }
 })
