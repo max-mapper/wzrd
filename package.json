@@ -18,7 +18,7 @@
     "minimist": "^1.1.0",
     "npm-execspawn": "^1.0.6",
     "pem": "^1.4.4",
-    "portfinder": "^0.4.0",
+    "portfinder": "^1.0.5",
     "routes-router": "^4.1.1"
   },
   "directories": {
